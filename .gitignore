@@ -1,0 +1,10 @@
+# Airflow logs
+apps/airflow/logs/
+
+# Node
+node_modules/
+apps/*/node_modules/
+
+# Env files
+.env
+apps/*/.env
