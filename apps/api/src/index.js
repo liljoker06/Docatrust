@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const { sequelize } = require('./models');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -12,6 +13,20 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'api' });
 });
 
-app.listen(PORT, () => {
-  console.log(`API running on port ${PORT}`);
-});
+async function start() {
+  try {
+    await sequelize.authenticate();
+    console.log('Database connected');
+    await sequelize.sync({ alter: true });
+    console.log('Models synchronized');
+
+    app.listen(PORT, () => {
+      console.log(`API running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error('Failed to start:', err);
+    process.exit(1);
+  }
+}
+
+start();
