@@ -9,5 +9,15 @@ apps/*/node_modules/
 .env
 apps/*/.env
 
-# .env
-.env
+# image files
+*.png
+*.jpg
+*.jpeg
+*.pdf
+
+# zip files
+*.zip
+
+# Python cache
+__pycache__/
+*.pyc

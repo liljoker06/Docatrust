@@ -66,6 +66,7 @@ services:
       - "8000:8000"
     volumes:
       - ./apps/python:/app
+      - ./data:/app/data
     env_file:
       - ./apps/api/.env
     environment:
