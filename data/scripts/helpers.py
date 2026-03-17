@@ -135,3 +135,48 @@ def corrupt_iban_checksum(iban: str) -> str:
 def format_iban(iban: str) -> str:
     """Formate un IBAN brut en groupes de 4 caractères."""
     return " ".join(iban[i:i+4] for i in range(0, len(iban), 4))
+
+
+# ─────────────────────────────────────────────
+# SIRET — validation et corruption (algorithme de Luhn)
+# ─────────────────────────────────────────────
+def luhn_checksum(number: str) -> int:
+    """Calcule le checksum de Luhn sur une chaîne de chiffres."""
+    digits = [int(d) for d in number]
+    odd_digits = digits[-1::-2]
+    even_digits = digits[-2::-2]
+    total = sum(odd_digits)
+    for d in even_digits:
+        total += sum(divmod(d * 2, 10))
+    return total % 10
+
+
+def is_luhn_valid(number: str) -> bool:
+    return luhn_checksum(number) == 0
+
+
+# ─────────────────────────────────────────────
+# KBIS — tribunaux de commerce et fonctions dirigeants
+# ─────────────────────────────────────────────
+TRIBUNAUX_COMMERCE = [
+    "Paris", "Lyon", "Marseille", "Bordeaux", "Lille",
+    "Nantes", "Toulouse", "Strasbourg", "Nice", "Rennes",
+    "Grenoble", "Montpellier", "Rouen", "Toulon", "Clermont-Ferrand",
+    "Nancy", "Dijon", "Angers", "Caen", "Orléans",
+]
+
+FONCTIONS_DIRIGEANT = [
+    "Gérant",
+    "Président",
+    "Directeur Général",
+    "Président du Conseil d'Administration",
+    "Co-gérant",
+    "Directeur Général Délégué",
+]
+
+
+def corrupt_siret(siret: str) -> str:
+    """Retourne un SIRET avec le dernier chiffre modifié pour invalider le checksum Luhn."""
+    last = int(siret[-1])
+    wrong = (last + random.randint(1, 9)) % 10
+    return siret[:-1] + str(wrong)

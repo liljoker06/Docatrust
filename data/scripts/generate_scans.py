@@ -18,8 +18,14 @@ DOSSIERS = [
     (os.path.join(DATA_DIR, "factures", "erronees"), os.path.join(DATA_DIR, "factures", "scans_erronees")),
     (os.path.join(DATA_DIR, "devis",    "valides"),  os.path.join(DATA_DIR, "devis",    "scans")),
     (os.path.join(DATA_DIR, "devis",    "erronees"), os.path.join(DATA_DIR, "devis",    "scans_erronees")),
-    (os.path.join(DATA_DIR, "rib",      "valides"),  os.path.join(DATA_DIR, "rib",      "scans")),
-    (os.path.join(DATA_DIR, "rib",      "erronees"), os.path.join(DATA_DIR, "rib",      "scans_erronees")),
+    (os.path.join(DATA_DIR, "rib",   "valides"),  os.path.join(DATA_DIR, "rib",   "scans")),
+    (os.path.join(DATA_DIR, "rib",   "erronees"), os.path.join(DATA_DIR, "rib",   "scans_erronees")),
+    (os.path.join(DATA_DIR, "siret",  "valides"),  os.path.join(DATA_DIR, "siret",  "scans")),
+    (os.path.join(DATA_DIR, "siret",  "erronees"), os.path.join(DATA_DIR, "siret",  "scans_erronees")),
+    (os.path.join(DATA_DIR, "urssaf", "valides"),  os.path.join(DATA_DIR, "urssaf", "scans")),
+    (os.path.join(DATA_DIR, "urssaf", "erronees"), os.path.join(DATA_DIR, "urssaf", "scans_erronees")),
+    (os.path.join(DATA_DIR, "kbis",   "valides"),  os.path.join(DATA_DIR, "kbis",   "scans")),
+    (os.path.join(DATA_DIR, "kbis",   "erronees"), os.path.join(DATA_DIR, "kbis",   "scans_erronees")),
 ]
 
 random.seed(42)

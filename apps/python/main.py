@@ -46,6 +46,30 @@ def generate_rib():
 def generate_rib_erronees():
     return _run_script("generate_rib_erronees.py")
 
+@app.post("/generate/siret")
+def generate_siret():
+    return _run_script("generate_siret.py")
+
+@app.post("/generate/siret-erronees")
+def generate_siret_erronees():
+    return _run_script("generate_siret_erronees.py")
+
+@app.post("/generate/urssaf")
+def generate_urssaf():
+    return _run_script("generate_urssaf.py")
+
+@app.post("/generate/urssaf-erronees")
+def generate_urssaf_erronees():
+    return _run_script("generate_urssaf_erronees.py")
+
+@app.post("/generate/kbis")
+def generate_kbis():
+    return _run_script("generate_kbis.py")
+
+@app.post("/generate/kbis-erronees")
+def generate_kbis_erronees():
+    return _run_script("generate_kbis_erronees.py")
+
 @app.post("/generate/scans")
 def generate_scans():
     return _run_script("generate_scans.py")
