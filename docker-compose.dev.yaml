@@ -1,0 +1,283 @@
+services:
+
+  # ==================== FRONT-ENDS ====================
+
+  web:
+    container_name: hackaton-web
+    build:
+      context: ./apps/web
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/web:/app
+      - /app/node_modules
+    environment:
+      VITE_API_URL: http://localhost:4000
+    networks:
+      - frontend
+    command: npm run dev
+
+  web-admin:
+    container_name: hackaton-web-admin
+    build:
+      context: ./apps/web-admin
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./apps/web-admin:/app
+      - /app/node_modules
+    environment:
+      VITE_API_URL: http://localhost:4000
+    networks:
+      - frontend
+    command: npm run dev
+
+  # ==================== API ====================
+
+  pgadmin:
+    container_name: hackaton-pgadmin
+    image: dpage/pgadmin4:latest
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@admin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+      PGADMIN_SERVER_JSON_FILE: /pgadmin4/servers.json
+    volumes:
+      - ./apps/api/db/servers.json:/pgadmin4/servers.json:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - backend
+
+  postgres:
+    container_name: hackaton-postgres
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME:-pyra_data}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./apps/api/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${DB_USER:-postgres}"]
+      interval: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - backend
+
+  api:
+    container_name: hackaton-api
+    build:
+      context: ./apps/api
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./apps/api:/app
+      - /app/node_modules
+      - ./apps/airflow/triggers:/opt/airflow/triggers
+    env_file:
+      - ./apps/api/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - frontend
+      - backend
+    command: npm run dev
+
+  # ==================== PYTHON / IA ====================
+
+  python:
+    container_name: hackaton-python
+    build:
+      context: ./apps/python
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./apps/python:/app
+    env_file:
+      - ./apps/api/.env
+    environment:
+      REDIS_URL: redis://redis:6379
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+    depends_on:
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - backend
+
+  # ==================== MINIO ====================
+
+  minio:
+    container_name: hackaton-minio
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - backend
+
+  minio-init:
+    container_name: hackaton-minio-init
+    image: minio/mc:latest
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: /bin/sh
+    command:
+      - -c
+      - |
+        mc alias set local http://minio:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD}
+        mc mb --ignore-existing local/raw
+        mc mb --ignore-existing local/clean
+        mc mb --ignore-existing local/curated
+    networks:
+      - backend
+
+  # ==================== REDIS ====================
+
+  redis:
+    container_name: hackaton-redis
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - backend
+
+  # ==================== AIRFLOW ====================
+
+  airflow-postgres:
+    container_name: hackaton-airflow-postgres
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ${AIRFLOW_DB_USER}
+      POSTGRES_PASSWORD: ${AIRFLOW_DB_PASSWORD}
+      POSTGRES_DB: airflow
+    volumes:
+      - airflow-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${AIRFLOW_DB_USER}"]
+      interval: 5s
+      retries: 5
+    networks:
+      - backend
+
+  airflow-init:
+    container_name: hackaton-airflow-init
+    build: ./apps/airflow
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        airflow db migrate
+        airflow users create \
+          --username ${AIRFLOW_USER} \
+          --password ${AIRFLOW_PASSWORD} \
+          --firstname API --lastname User \
+          --role Admin \
+          --email ${AIRFLOW_EMAIL} || true
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${AIRFLOW_DB_USER}:${AIRFLOW_DB_PASSWORD}@airflow-postgres/airflow
+    depends_on:
+      airflow-postgres:
+        condition: service_healthy
+    networks:
+      - backend
+
+  airflow-webserver:
+    container_name: hackaton-airflow-webserver
+    build: ./apps/airflow
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./apps/airflow:/opt/airflow
+      - ./apps/python:/opt/airflow/python
+      - ./apps/api:/opt/airflow/api
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${AIRFLOW_DB_USER}:${AIRFLOW_DB_PASSWORD}@airflow-postgres/airflow
+      AIRFLOW__CORE__PARALLELISM: 4
+      AIRFLOW__CORE__MAX_ACTIVE_TASKS_PER_DAG: 2
+      AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG: 4
+      AIRFLOW__API__AUTH_BACKENDS: >
+        airflow.api.auth.backend.basic_auth,
+        airflow.api.auth.backend.session
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+    command: airflow webserver
+    networks:
+      - backend
+
+  airflow-scheduler:
+    container_name: hackaton-airflow-scheduler
+    build: ./apps/airflow
+    volumes:
+      - ./apps/airflow:/opt/airflow
+      - ./apps/python:/opt/airflow/python
+      - ./apps/api:/opt/airflow/api
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${AIRFLOW_DB_USER}:${AIRFLOW_DB_PASSWORD}@airflow-postgres/airflow
+      AIRFLOW__CORE__PARALLELISM: 4
+      AIRFLOW__CORE__MAX_ACTIVE_TASKS_PER_DAG: 2
+      AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG: 4
+      AIRFLOW__API__AUTH_BACKENDS: >
+        airflow.api.auth.backend.basic_auth,
+        airflow.api.auth.backend.session
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+    command: airflow scheduler
+    networks:
+      - backend
+
+# ==================== VOLUMES ====================
+
+volumes:
+  postgres-data:
+  airflow-postgres-data:
+  redis-data:
+  minio-data:
+
+# ==================== NETWORKS ====================
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge

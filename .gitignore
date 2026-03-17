@@ -1,0 +1,23 @@
+# Airflow logs
+apps/airflow/logs/
+
+# Node
+node_modules/
+apps/*/node_modules/
+
+# Env files
+.env
+apps/*/.env
+
+# image files
+*.png
+*.jpg
+*.jpeg
+*.pdf
+
+# zip files
+*.zip
+
+# Python cache
+__pycache__/
+*.pyc
