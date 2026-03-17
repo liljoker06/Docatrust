@@ -6,7 +6,7 @@ from PIL import Image, ImageFilter, ImageEnhance, ImageDraw
 from pathlib import Path
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.normpath(os.path.join(SCRIPT_DIR, ".."))
+DATA_DIR = os.path.normpath(os.path.join(SCRIPT_DIR, "..", "data"))
 
 # Chemin Poppler : défini via variable d'environnement pour Windows,
 # None sur Linux/Docker (poppler-utils installé en système)

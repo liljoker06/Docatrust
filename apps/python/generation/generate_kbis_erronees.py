@@ -18,7 +18,7 @@ fake = Faker('fr_FR')
 random.seed(88)
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR   = os.path.normpath(os.path.join(SCRIPT_DIR, ".."))
+DATA_DIR   = os.path.normpath(os.path.join(SCRIPT_DIR, "..", "data"))
 
 df = pd.read_csv(os.path.join(DATA_DIR, "raw", "entreprises_sample.csv"), dtype=str).fillna("")
 
