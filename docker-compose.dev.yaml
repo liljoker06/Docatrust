@@ -34,6 +34,44 @@ services:
 
   # ==================== API ====================
 
+  pgadmin:
+    container_name: hackaton-pgadmin
+    image: dpage/pgadmin4:latest
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@admin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+      PGADMIN_SERVER_JSON_FILE: /pgadmin4/servers.json
+    volumes:
+      - ./apps/api/db/servers.json:/pgadmin4/servers.json:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - backend
+
+  postgres:
+    container_name: hackaton-postgres
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME:-pyra_data}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./apps/api/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${DB_USER:-postgres}"]
+      interval: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - backend
+
   api:
     container_name: hackaton-api
     build:
@@ -47,6 +85,8 @@ services:
     env_file:
       - ./apps/api/.env
     depends_on:
+      postgres:
+        condition: service_healthy
       redis:
         condition: service_healthy
       minio:
@@ -230,6 +270,7 @@ services:
 # ==================== VOLUMES ====================
 
 volumes:
+  postgres-data:
   airflow-postgres-data:
   redis-data:
   minio-data:
