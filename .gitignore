@@ -5,6 +5,9 @@ apps/airflow/logs/
 node_modules/
 apps/*/node_modules/
 
+# Python
+apps/python/__pycache__/
+
 # Env files
 .env
 apps/*/.env
