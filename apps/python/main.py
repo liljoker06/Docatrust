@@ -34,6 +34,18 @@ def generate_factures():
 def generate_factures_erronees():
     return _run_script("generate_factures_erronees.py")
 
+@app.post("/generate/devis-erronees")
+def generate_devis_erronees():
+    return _run_script("generate_devis_erronees.py")
+
+@app.post("/generate/rib")
+def generate_rib():
+    return _run_script("generate_rib.py")
+
+@app.post("/generate/rib-erronees")
+def generate_rib_erronees():
+    return _run_script("generate_rib_erronees.py")
+
 @app.post("/generate/scans")
 def generate_scans():
     return _run_script("generate_scans.py")

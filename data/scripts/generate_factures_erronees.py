@@ -37,7 +37,8 @@ def get_entreprise(row):
     }
 
 def build_pdf(filename, fournisseur, client, date_emission, date_echeance,
-              lignes, total_ht, montant_tva, total_ttc, taux_tva, anomalie_label=None):
+              lignes, total_ht, montant_tva, total_ttc, taux_tva,
+              numero_facture=None, anomalie_label=None):
     """Fonction générique de construction PDF — réutilisée pour tous les cas."""
     doc = SimpleDocTemplate(filename, pagesize=A4,
                             rightMargin=2*cm, leftMargin=2*cm,
@@ -55,7 +56,8 @@ def build_pdf(filename, fournisseur, client, date_emission, date_echeance,
     if anomalie_label:
         elements.append(Paragraph(f"[TEST - {anomalie_label}]", red_style))
     elements.append(Spacer(1, 0.3*cm))
-    elements.append(Paragraph(f"N° {fake.numerify('FACT-####-##')}", bold))
+    if numero_facture:
+        elements.append(Paragraph(f"N° {numero_facture}", bold))
     elements.append(Paragraph(f"Date d'émission : {date_emission.strftime('%d/%m/%Y')}", normal))
     elements.append(Paragraph(f"Date d'échéance : {date_echeance.strftime('%d/%m/%Y')}", normal))
     elements.append(Spacer(1, 0.5*cm))
@@ -131,37 +133,188 @@ def base_lignes():
 
 # ─────────────────────────────────────────────
 # CAS 1 — TVA INCOHÉRENTE
+# Le taux TVA affiché ne correspond pas au montant calculé
 # ─────────────────────────────────────────────
 print("Génération cas 1 : TVA incohérente...")
 for i in range(1, 11):
-    fournisseur = get_entreprise(df.sample(1).iloc[0])
-    client      = get_entreprise(df.sample(1).iloc[0])
+    fournisseur   = get_entreprise(df.sample(1).iloc[0])
+    client        = get_entreprise(df.sample(1).iloc[0])
     date_emission = fake.date_between(start_date="-1y", end_date="today")
     date_echeance = date_emission + timedelta(days=30)
-    lignes    = base_lignes()
-    total_ht  = round(sum(l["total_ht"] for l in lignes), 2)
-    taux_tva  = random.choice([0.20, 0.10, 0.055])
+    lignes        = base_lignes()
+    total_ht      = round(sum(l["total_ht"] for l in lignes), 2)
+    taux_tva      = random.choice([0.20, 0.10, 0.055])
 
     # TVA volontairement fausse (mauvais taux appliqué)
-    faux_taux     = random.choice([t for t in [0.20, 0.10, 0.055] if t != taux_tva])
-    montant_tva   = round(total_ht * faux_taux, 2)   # ← incohérent avec taux_tva affiché
+    faux_taux   = random.choice([t for t in [0.20, 0.10, 0.055] if t != taux_tva])
+    montant_tva = round(total_ht * faux_taux, 2)   # ← incohérent avec taux_tva affiché
+    total_ttc   = round(total_ht + montant_tva, 2)
+
+    build_pdf(
+        filename        = f"{OUTPUT_DIR}/cas1_tva_incoherente_{i:02d}.pdf",
+        fournisseur     = fournisseur,
+        client          = client,
+        date_emission   = date_emission,
+        date_echeance   = date_echeance,
+        lignes          = lignes,
+        total_ht        = total_ht,
+        montant_tva     = montant_tva,
+        total_ttc       = total_ttc,
+        taux_tva        = taux_tva,
+        numero_facture  = fake.numerify("FACT-####-##"),
+        anomalie_label  = "TVA INCOHERENTE"
+    )
+    print(f"  ✓ cas1_tva_incoherente_{i:02d}.pdf")
+print("Done ! Cas 1 terminé.\n")
+
+# ─────────────────────────────────────────────
+# CAS 2 — TOTAUX INCOHÉRENTS
+# Le total HT affiché ne correspond pas à la somme des lignes
+# ─────────────────────────────────────────────
+print("Génération cas 2 : totaux incohérents...")
+for i in range(1, 11):
+    fournisseur   = get_entreprise(df.sample(1).iloc[0])
+    client        = get_entreprise(df.sample(1).iloc[0])
+    date_emission = fake.date_between(start_date="-1y", end_date="today")
+    date_echeance = date_emission + timedelta(days=30)
+    lignes        = base_lignes()
+    total_ht_reel = round(sum(l["total_ht"] for l in lignes), 2)
+    taux_tva      = random.choice([0.20, 0.10, 0.055])
+
+    # Total HT volontairement faux (écart aléatoire)
+    ecart         = round(random.uniform(50, 500) * random.choice([-1, 1]), 2)
+    total_ht_faux = round(total_ht_reel + ecart, 2)
+    montant_tva   = round(total_ht_faux * taux_tva, 2)
+    total_ttc     = round(total_ht_faux + montant_tva, 2)
+
+    build_pdf(
+        filename        = f"{OUTPUT_DIR}/cas2_totaux_incoherents_{i:02d}.pdf",
+        fournisseur     = fournisseur,
+        client          = client,
+        date_emission   = date_emission,
+        date_echeance   = date_echeance,
+        lignes          = lignes,
+        total_ht        = total_ht_faux,   # ← affiché mais faux
+        montant_tva     = montant_tva,
+        total_ttc       = total_ttc,
+        taux_tva        = taux_tva,
+        numero_facture  = fake.numerify("FACT-####-##"),
+        anomalie_label  = "TOTAUX INCOHERENTS"
+    )
+    print(f"  ✓ cas2_totaux_incoherents_{i:02d}.pdf")
+print("Done ! Cas 2 terminé.\n")
+
+# ─────────────────────────────────────────────
+# CAS 3 — NUMÉRO DE FACTURE MANQUANT
+# Le champ numéro de facture est absent
+# ─────────────────────────────────────────────
+print("Génération cas 3 : numéro de facture manquant...")
+for i in range(1, 11):
+    fournisseur   = get_entreprise(df.sample(1).iloc[0])
+    client        = get_entreprise(df.sample(1).iloc[0])
+    date_emission = fake.date_between(start_date="-1y", end_date="today")
+    date_echeance = date_emission + timedelta(days=30)
+    lignes        = base_lignes()
+    total_ht      = round(sum(l["total_ht"] for l in lignes), 2)
+    taux_tva      = random.choice([0.20, 0.10, 0.055])
+    montant_tva   = round(total_ht * taux_tva, 2)
     total_ttc     = round(total_ht + montant_tva, 2)
 
     build_pdf(
-        filename       = f"{OUTPUT_DIR}/cas1_tva_incoherente_{i:02d}.pdf",
-        fournisseur    = fournisseur,
-        client         = client,
-        date_emission  = date_emission,
-        date_echeance  = date_echeance,
-        lignes         = lignes,
-        total_ht       = total_ht,
-        montant_tva    = montant_tva,
-        total_ttc      = total_ttc,
-        taux_tva       = taux_tva,
-        anomalie_label = "TVA INCOHERENTE"
+        filename        = f"{OUTPUT_DIR}/cas3_numero_manquant_{i:02d}.pdf",
+        fournisseur     = fournisseur,
+        client          = client,
+        date_emission   = date_emission,
+        date_echeance   = date_echeance,
+        lignes          = lignes,
+        total_ht        = total_ht,
+        montant_tva     = montant_tva,
+        total_ttc       = total_ttc,
+        taux_tva        = taux_tva,
+        numero_facture  = None,            # ← absent volontairement
+        anomalie_label  = "NUMERO MANQUANT"
     )
-    print(f"  ✓ cas1_tva_incoherente_{i:02d}.pdf")
+    print(f"  ✓ cas3_numero_manquant_{i:02d}.pdf")
+print("Done ! Cas 3 terminé.\n")
 
-print("\nDone ! Cas 1 terminé.")
+# ─────────────────────────────────────────────
+# CAS 4 — REMISE ILLOGIQUE
+# Une remise dépasse 100% et rend le total négatif
+# ─────────────────────────────────────────────
+print("Génération cas 4 : remise illogique...")
+for i in range(1, 11):
+    fournisseur   = get_entreprise(df.sample(1).iloc[0])
+    client        = get_entreprise(df.sample(1).iloc[0])
+    date_emission = fake.date_between(start_date="-1y", end_date="today")
+    date_echeance = date_emission + timedelta(days=30)
+    lignes        = base_lignes()
+    total_ht_brut = round(sum(l["total_ht"] for l in lignes), 2)
+    taux_tva      = random.choice([0.20, 0.10, 0.055])
+
+    # Remise aberrante : entre 110% et 200%
+    taux_remise = round(random.uniform(1.1, 2.0), 2)
+    remise      = round(total_ht_brut * taux_remise, 2)
+    total_ht    = round(total_ht_brut - remise, 2)   # ← négatif
+    montant_tva = round(total_ht * taux_tva, 2)
+    total_ttc   = round(total_ht + montant_tva, 2)
+
+    lignes_affichees = lignes + [{
+        "description": f"Remise commerciale ({int(taux_remise * 100)}%)",
+        "qte": 1,
+        "pu_ht": -remise,
+        "total_ht": -remise,
+    }]
+
+    build_pdf(
+        filename        = f"{OUTPUT_DIR}/cas4_remise_illogique_{i:02d}.pdf",
+        fournisseur     = fournisseur,
+        client          = client,
+        date_emission   = date_emission,
+        date_echeance   = date_echeance,
+        lignes          = lignes_affichees,
+        total_ht        = total_ht,
+        montant_tva     = montant_tva,
+        total_ttc       = total_ttc,
+        taux_tva        = taux_tva,
+        numero_facture  = fake.numerify("FACT-####-##"),
+        anomalie_label  = "REMISE ILLOGIQUE"
+    )
+    print(f"  ✓ cas4_remise_illogique_{i:02d}.pdf")
+print("Done ! Cas 4 terminé.\n")
+
+# ─────────────────────────────────────────────
+# CAS 5 — FOURNISSEUR IDENTIQUE AU CLIENT
+# La même entreprise est à la fois émetteur et destinataire
+# ─────────────────────────────────────────────
+print("Génération cas 5 : fournisseur = client...")
+for i in range(1, 11):
+    # Même entreprise des deux côtés
+    entreprise    = get_entreprise(df.sample(1).iloc[0])
+    date_emission = fake.date_between(start_date="-1y", end_date="today")
+    date_echeance = date_emission + timedelta(days=30)
+    lignes        = base_lignes()
+    total_ht      = round(sum(l["total_ht"] for l in lignes), 2)
+    taux_tva      = random.choice([0.20, 0.10, 0.055])
+    montant_tva   = round(total_ht * taux_tva, 2)
+    total_ttc     = round(total_ht + montant_tva, 2)
+
+    build_pdf(
+        filename        = f"{OUTPUT_DIR}/cas5_fournisseur_egal_client_{i:02d}.pdf",
+        fournisseur     = entreprise,
+        client          = entreprise,   # ← même entreprise
+        date_emission   = date_emission,
+        date_echeance   = date_echeance,
+        lignes          = lignes,
+        total_ht        = total_ht,
+        montant_tva     = montant_tva,
+        total_ttc       = total_ttc,
+        taux_tva        = taux_tva,
+        numero_facture  = fake.numerify("FACT-####-##"),
+        anomalie_label  = "FOURNISSEUR = CLIENT"
+    )
+    print(f"  ✓ cas5_fournisseur_egal_client_{i:02d}.pdf")
+print("Done ! Cas 5 terminé.\n")
+
+print(f"Terminé ! 50 factures erronées générées dans {OUTPUT_DIR}/")
 
 

@@ -14,8 +14,12 @@ POPPLER_PATH = os.environ.get("POPPLER_PATH", None)
 
 # Dossiers à traiter : (input, output)
 DOSSIERS = [
-    (os.path.join(DATA_DIR, "factures", "valides"), os.path.join(DATA_DIR, "factures", "scans")),
-    (os.path.join(DATA_DIR, "devis", "valides"),    os.path.join(DATA_DIR, "devis", "scans")),
+    (os.path.join(DATA_DIR, "factures", "valides"),  os.path.join(DATA_DIR, "factures", "scans")),
+    (os.path.join(DATA_DIR, "factures", "erronees"), os.path.join(DATA_DIR, "factures", "scans_erronees")),
+    (os.path.join(DATA_DIR, "devis",    "valides"),  os.path.join(DATA_DIR, "devis",    "scans")),
+    (os.path.join(DATA_DIR, "devis",    "erronees"), os.path.join(DATA_DIR, "devis",    "scans_erronees")),
+    (os.path.join(DATA_DIR, "rib",      "valides"),  os.path.join(DATA_DIR, "rib",      "scans")),
+    (os.path.join(DATA_DIR, "rib",      "erronees"), os.path.join(DATA_DIR, "rib",      "scans_erronees")),
 ]
 
 random.seed(42)
