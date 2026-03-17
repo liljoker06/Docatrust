@@ -5,7 +5,7 @@ import os
 
 app = FastAPI()
 
-SCRIPTS_DIR = "/app/data/scripts"
+SCRIPTS_DIR = "/app/generation"
 
 @app.get("/health")
 def health():
@@ -73,3 +73,7 @@ def generate_kbis_erronees():
 @app.post("/generate/scans")
 def generate_scans():
     return _run_script("generate_scans.py")
+
+@app.post("/generate/manifest")
+def generate_manifest():
+    return _run_script("generate_manifest.py")
