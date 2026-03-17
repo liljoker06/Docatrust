@@ -34,6 +34,20 @@ Invoke-RestMethod -Method Post -Uri "http://localhost:8000/generate/scans"
 > Cette étape convertit tous les PDFs en images simulant des scans de mauvaise qualité.  
 > Elle est longue (~2-3 min), attendre le retour `status: ok`.
 
+## 4. Générer le manifeste du dataset
+```powershell
+Invoke-RestMethod -Method Post -Uri "http://localhost:8000/generate/manifest"
+```
+> Génère `data/dataset_manifest.csv` — un fichier listant tous les fichiers du dataset avec leurs labels.  
+> À régénérer après chaque appel à `/generate/scans`.
+
+Le manifeste est directement exploitable en Python :
+```python
+import pandas as pd
+df = pd.read_csv("data/dataset_manifest.csv")
+# colonnes : fichier, type, label, anomalie, format
+```
+
 ## Résultat attendu
 
 ```
