@@ -24,3 +24,7 @@ apps/*/.env
 # Python cache
 __pycache__/
 *.pyc
+
+# Local virtualenv
+.venv/
+.venv/*
