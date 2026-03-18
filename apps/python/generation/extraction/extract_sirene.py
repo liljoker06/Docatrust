@@ -2,9 +2,12 @@ import pandas as pd
 import zipfile
 import os
 
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.normpath(os.path.join(SCRIPT_DIR, "..", "..", "data"))
+
 # Chemin vers ton zip
-ZIP_PATH = "data/StockEtablissement_utf8.zip"
-OUTPUT_PATH = "data/entreprises_sample.csv"
+ZIP_PATH = os.path.join(DATA_DIR, "raw", "StockEtablissement_utf8.zip")
+OUTPUT_PATH = os.path.join(DATA_DIR, "raw", "entreprises_sample.csv")
 
 # Colonnes utiles pour nos factures
 COLONNES = [
