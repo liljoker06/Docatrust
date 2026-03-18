@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Sequence, Tuple
 
 from .detect_fields import Detection, Rect
-from .paddleocr_utils import OcrItem
+from ..ocr.paddleocr_utils import OcrItem
 
 
 def _rect_center(r: Rect) -> Tuple[float, float]:

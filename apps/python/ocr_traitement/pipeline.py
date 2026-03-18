@@ -4,11 +4,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 
-from .detect_fields import draw_detections, detect_invoice_fields_on_image
-from .export_csv import build_invoice_row
-from .insee_sirene import lookup_sirene
-from .paddleocr_utils import init_paddleocr, paddle_predict_to_items
-from .validation import alerts_to_json, validate_invoice_row
+from .extraction.detect_fields import draw_detections, detect_invoice_fields_on_image
+from .extraction.export_csv import build_invoice_row
+from .insee.insee_sirene import lookup_sirene
+from .ocr.paddleocr_utils import init_paddleocr, paddle_predict_to_items
+from .validation.validation import alerts_to_json, validate_invoice_row
 
 
 @dataclass(frozen=True)

@@ -108,6 +108,7 @@ services:
       - ./apps/python:/app
     env_file:
       - ./apps/api/.env
+      - ./apps/python/.env
     environment:
       REDIS_URL: redis://redis:6379
       MINIO_ENDPOINT: minio:9000

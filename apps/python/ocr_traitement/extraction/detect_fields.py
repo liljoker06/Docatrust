@@ -5,7 +5,7 @@ from typing import Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
 
-from .paddleocr_utils import OcrItem
+from ..ocr.paddleocr_utils import OcrItem
 
 
 Rect = Tuple[int, int, int, int]

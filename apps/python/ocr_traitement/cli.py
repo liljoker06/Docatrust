@@ -3,18 +3,18 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from .config import Settings
-from .detect_fields import draw_detections, detect_invoice_fields_on_image
-from .export_csv import build_invoice_row, export_invoice_csv
-from .insee_sirene import lookup_sirene
-from .io_utils import list_facture_images
-from .paddleocr_utils import init_paddleocr, paddle_predict_to_items
-from .validation import (
+from .utils.config import Settings
+from .extraction.detect_fields import draw_detections, detect_invoice_fields_on_image
+from .extraction.export_csv import build_invoice_row, export_invoice_csv
+from .insee.insee_sirene import lookup_sirene
+from .utils.io_utils import list_facture_images
+from .ocr.paddleocr_utils import init_paddleocr, paddle_predict_to_items
+from .validation.validation import (
     alerts_to_json,
     extract_attestation_vigilance_fields,
     validate_invoice_row,
     validate_invoice_vs_attestation,
- )
+)
 
 
 def _project_root() -> Path:
