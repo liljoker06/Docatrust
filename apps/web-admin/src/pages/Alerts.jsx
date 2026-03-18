@@ -1,4 +1,5 @@
 import StatusBadge from "../components/StatusBadge";
+import "../styles/alerts.css";
 
 export default function Alerts() {
   const alerts = [
@@ -8,14 +9,35 @@ export default function Alerts() {
   ];
 
   return (
-    <div>
-      <h1>Alerts</h1>
+    <div className="alerts-page">
+      {/* HEADER */}
+      <div className="alerts-header">
+        <h1 className="alerts-title">Alerts</h1>
+        <p className="alerts-subtitle">
+          Monitor compliance issues and document problems.
+        </p>
+      </div>
 
-      {alerts.map((alert) => (
-        <div key={alert.id}>
-          <p>{alert.message} - <StatusBadge status={alert.status} /></p>
+      {/* ALERTS PANEL */}
+      <div className="alerts-panel">
+        <div className="panel-head">
+          <h3>Recent Alerts</h3>
+          <span>•••</span>
         </div>
-      ))}
+
+        <div className="alerts-list">
+          {alerts.map((alert) => (
+            <div key={alert.id} className="alert-card">
+              <div className="alert-info">
+                <strong>{alert.message}</strong>
+                <p>Alert #{alert.id}</p>
+              </div>
+
+              <StatusBadge status={alert.status} />
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

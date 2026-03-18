@@ -1,8 +1,12 @@
-export default function StatCard({ title, value }) {
+export default function StatCard({ title, value, fillClass }) {
   return (
-    <div style={{ border: "1px solid #ccc", padding: "16px", marginBottom: "12px" }}>
-      <h3>{value}</h3>
-      <p>{title}</p>
+    <div className="stat-card">
+      <p className="stat-label">{title}</p>
+      <h2>{value}</h2>
+
+      <div className="stat-bar">
+        <div className={`stat-fill ${fillClass}`}></div>
+      </div>
     </div>
   );
 }
