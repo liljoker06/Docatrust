@@ -15,8 +15,8 @@ import random
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageEnhance
 
 # Configuration
-FACTURETXT_DIR = "/Users/aymanehajli/Desktop/IPSSI/M2/HACKATHON/facturetxt"
-OUTPUT_DIR = "/Users/aymanehajli/Desktop/IPSSI/M2/HACKATHON/output/facture-images"
+FACTURETXT_DIR = "/Users/aymanehajli/Desktop/IPSSI/M2/HACKATHON/Aymane/facturetxt"
+OUTPUT_DIR = "/Users/aymanehajli/Desktop/IPSSI/M2/HACKATHON/Aymane/output/facture-images"
 MANIFEST_FILE = os.path.join(OUTPUT_DIR, "manifest.txt")
 
 # Image settings

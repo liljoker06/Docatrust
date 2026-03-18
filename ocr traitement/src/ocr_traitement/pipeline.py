@@ -8,6 +8,7 @@ from .detect_fields import draw_detections, detect_invoice_fields_on_image
 from .export_csv import build_invoice_row
 from .insee_sirene import lookup_sirene
 from .paddleocr_utils import init_paddleocr, paddle_predict_to_items
+from .validation import alerts_to_json, validate_invoice_row
 
 
 @dataclass(frozen=True)
@@ -104,6 +105,16 @@ def process_invoice_image(
                     elif insee.http_status:
                         row["fraud_alert"] = "unknown"
                         row["fraud_reason"] = f"INSEE_HTTP_{insee.http_status}"
+
+    alerts = validate_invoice_row(row)
+    if alerts:
+        row["alerts_count"] = str(len(alerts))
+        row["alerts_json"] = alerts_to_json(alerts)
+        row["alerts_codes"] = ",".join([a.code for a in alerts])
+    else:
+        row["alerts_count"] = "0"
+        row["alerts_json"] = "[]"
+        row["alerts_codes"] = ""
 
     return PipelineResult(image_path=image_path, row=row, annotated_bgr=annotated)
 

@@ -9,6 +9,12 @@ from .export_csv import build_invoice_row, export_invoice_csv
 from .insee_sirene import lookup_sirene
 from .io_utils import list_facture_images
 from .paddleocr_utils import init_paddleocr, paddle_predict_to_items
+from .validation import (
+    alerts_to_json,
+    extract_attestation_vigilance_fields,
+    validate_invoice_row,
+    validate_invoice_vs_attestation,
+ )
 
 
 def _project_root() -> Path:
@@ -26,6 +32,12 @@ def main(argv: list[str] | None = None) -> int:
 
     p = argparse.ArgumentParser(prog="ocr-traitement", description="PaddleOCR invoice pipeline (from OCR.ipynb).")
     p.add_argument("--img", type=str, default="", help="Path to a single invoice image to process.")
+    p.add_argument(
+        "--attestation",
+        type=str,
+        default="",
+        help="Path to an attestation de vigilance image to cross-check (SIRET, expiry date).",
+    )
     p.add_argument("--pattern", type=str, default="clean", help="Filter images in FACTURE_IMG_DIR (default: clean).")
     p.add_argument("--out-csv", type=str, default="outputs/paddleocr_invoice_fields.csv", help="CSV output path.")
     p.add_argument("--annotated", type=str, default="outputs/annotated.jpg", help="Annotated image output path.")
@@ -139,6 +151,34 @@ def main(argv: list[str] | None = None) -> int:
                 elif insee.http_status:
                     row["fraud_alert"] = "unknown"
                     row["fraud_reason"] = f"INSEE_HTTP_{insee.http_status}"
+
+    # --- Intelligent validation / inconsistencies
+    alerts = validate_invoice_row(row)
+
+    if args.attestation:
+        att_path = Path(args.attestation)
+        if not att_path.exists():
+            raise FileNotFoundError(f"Attestation not found: {att_path}")
+        att_bgr = cv2.imread(str(att_path))
+        if att_bgr is None:
+            raise FileNotFoundError(f"Cannot read attestation image: {att_path}")
+        att_res = paddle_ocr.predict(att_bgr)
+        att_items = paddle_predict_to_items(att_res)
+        att_text = "\n".join([(it.text or "").strip() for it in att_items if (it.text or "").strip()])
+        att_fields = extract_attestation_vigilance_fields(att_text)
+        alerts += validate_invoice_vs_attestation(row, att_fields)
+        # also export extracted fields for traceability
+        row.update(att_fields)
+
+    if alerts:
+        row["alerts_count"] = str(len(alerts))
+        row["alerts_json"] = alerts_to_json(alerts)
+        # Keep a simple summary for CSV scanning
+        row["alerts_codes"] = ",".join([a.code for a in alerts])
+    else:
+        row["alerts_count"] = "0"
+        row["alerts_json"] = "[]"
+        row["alerts_codes"] = ""
 
     out_csv = export_invoice_csv(row, root / args.out_csv)
 
