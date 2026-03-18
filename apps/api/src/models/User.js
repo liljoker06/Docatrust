@@ -20,6 +20,10 @@ const User = sequelize.define('User', {
     type: DataTypes.ENUM('ADMIN', 'OPERATOR', 'AUDITOR'),
     defaultValue: 'OPERATOR',
   },
+  is_active: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
+  },
   created_at: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,

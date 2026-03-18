@@ -4,6 +4,9 @@ const cors = require("cors");
 const morgan = require("morgan");
 const { sequelize } = require("./models");
 const userRouter = require("./routes/user.routes.js");
+const adminRouter = require("./routes/admin.routes.js");
+const authMiddleware = require("./middlewares/auth.middleware.js");
+const requireRole = require("./middlewares/role.middleware.js");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -19,6 +22,7 @@ app.get("/health", (req, res) => {
 });
 
 app.use("/api/users", userRouter);
+app.use("/api/admin", authMiddleware, requireRole("ADMIN"), adminRouter);
 
 async function start() {
   try {
