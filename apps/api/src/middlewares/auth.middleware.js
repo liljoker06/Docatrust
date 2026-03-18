@@ -40,6 +40,10 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
 
   req.user = await User.findByPk(matchedToken.user_id);
 
+  if (!req.user || !req.user.is_active) {
+    return res.status(401).json({ error: true, message: "Account disabled" });
+  }
+
   next();
 });
 
