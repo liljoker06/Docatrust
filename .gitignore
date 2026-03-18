@@ -25,4 +25,10 @@ apps/*/.env
 __pycache__/
 *.pyc
 
+<<<<<<< HEAD
 .venv/*
+=======
+# Local virtualenv
+.venv/
+.venv/*
+>>>>>>> 6cbc7c474c6ca2324f737a801ec313fa61b4a9ed
