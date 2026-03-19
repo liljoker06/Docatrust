@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import "../styles/sidebar.css";
+import { clearAuthSession } from "../lib/auth";
 
 function DashboardIcon() {
   return (
@@ -31,6 +32,31 @@ function DocumentIcon() {
   );
 }
 
+function GenerationIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M12 2v4"></path>
+      <path d="M12 18v4"></path>
+      <path d="M4.93 4.93l2.83 2.83"></path>
+      <path d="M16.24 16.24l2.83 2.83"></path>
+      <path d="M2 12h4"></path>
+      <path d="M18 12h4"></path>
+      <path d="M4.93 19.07l2.83-2.83"></path>
+      <path d="M16.24 7.76l2.83-2.83"></path>
+    </svg>
+  );
+}
+
+function OcrIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path>
+      <path d="M3.27 6.96L12 12.01l8.73-5.05"></path>
+      <path d="M12 22.08V12"></path>
+    </svg>
+  );
+}
+
 function LogoutIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -48,6 +74,8 @@ export default function Sidebar() {
     { to: "/dashboard", label: "Dashboard", icon: <DashboardIcon /> },
     { to: "/upload", label: "Upload", icon: <UploadIcon /> },
     { to: "/documents", label: "Documents", icon: <DocumentIcon /> },
+    { to: "/generation", label: "Génération", icon: <GenerationIcon /> },
+    { to: "/ocr", label: "OCR", icon: <OcrIcon /> },
     { to: "/", label: "Logout", icon: <LogoutIcon /> },
   ];
 
@@ -61,6 +89,11 @@ export default function Sidebar() {
             <Link
               key={item.to + item.label}
               to={item.to}
+              onClick={() => {
+                if (item.label === "Logout") {
+                  clearAuthSession();
+                }
+              }}
               className={`sidebar-link ${location.pathname === item.to ? "active" : ""}`}
             >
               <span className="sidebar-icon">{item.icon}</span>
