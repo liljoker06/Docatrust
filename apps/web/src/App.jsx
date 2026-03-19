@@ -4,8 +4,6 @@ import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import Upload from "./pages/Upload";
 import Documents from "./pages/Documents";
-import Generation from "./pages/Generation";
-import Ocr from "./pages/Ocr";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import { isAuthenticated } from "./lib/auth";
@@ -85,28 +83,6 @@ export default function App() {
             <ProtectedRoute>
               <Layout>
                 <Documents />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/generation"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Generation />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/ocr"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Ocr />
               </Layout>
             </ProtectedRoute>
           }
