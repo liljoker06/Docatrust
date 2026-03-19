@@ -1,17 +1,41 @@
 import "../styles/dashboard.css";
-import { Link } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { getAuthSession } from "../lib/auth";
-import { getActivities } from "../lib/activity";
-import { getDocuments } from "../lib/documents";
 import { meApi } from "../services/authApi";
 import { API_BASE, PY_BASE } from "../services/apiClient";
+import { listDocuments, getDocumentResult } from "../services/pyraApi";
+
+function parseAlerts(result) {
+  if (!result) return [];
+  let alerts = result.alerts ?? result.alerts_json ?? result.ALERTS_JSON ?? [];
+  if (typeof alerts === "string") {
+    try {
+      alerts = JSON.parse(alerts);
+    } catch {
+      alerts = [];
+    }
+  }
+  return Array.isArray(alerts) ? alerts : [];
+}
+
+function classifyDocument(doc, result) {
+  const status = String(doc?.status || "").toUpperCase();
+  if (status === "ERROR") return "rejected";
+  if (status === "RAW") return "warning";
+  if (!result) return status === "CURATED" ? "validated" : "warning";
+
+  const alerts = parseAlerts(result);
+  if (alerts.length === 0) return "validated";
+  const hasError = alerts.some((a) => String(a?.level || "").toLowerCase() === "error");
+  return hasError ? "rejected" : "warning";
+}
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [apiHealth, setApiHealth] = useState("loading");
   const [pyHealth, setPyHealth] = useState("loading");
-  const [activities, setActivities] = useState([]);
+  const [dashboardLoading, setDashboardLoading] = useState(true);
+  const [dashboardError, setDashboardError] = useState("");
   const [documents, setDocuments] = useState([]);
 
   useEffect(() => {
@@ -45,10 +69,42 @@ export default function Dashboard() {
       }
     })();
 
-    if (alive) {
-      setActivities(getActivities());
-      setDocuments(getDocuments());
-    }
+    (async () => {
+      try {
+        const res = await listDocuments();
+        if (!alive) return;
+        const docs = res.documents ?? [];
+
+        const enriched = await Promise.all(
+          docs.map(async (doc) => {
+            const base = {
+              id: doc.id,
+              name: doc.minioRaw?.original_filename || doc.id,
+              createdAt: doc.created_at || doc.createdAt || new Date().toISOString(),
+              apiStatus: doc.status,
+            };
+
+            if (!["CLEAN", "CURATED", "ERROR"].includes(String(doc.status || "").toUpperCase())) {
+              return { ...base, status: classifyDocument(doc, null) };
+            }
+
+            try {
+              const detail = await getDocumentResult(doc.id);
+              return { ...base, status: classifyDocument(doc, detail?.result), result: detail?.result };
+            } catch {
+              return { ...base, status: classifyDocument(doc, null) };
+            }
+          })
+        );
+
+        if (alive) setDocuments(enriched);
+      } catch (e) {
+        if (alive) setDashboardError(e.message || "Unable to load dashboard data.");
+      } finally {
+        if (alive) setDashboardLoading(false);
+      }
+    })();
+
     return () => {
       alive = false;
     };
@@ -68,14 +124,8 @@ export default function Dashboard() {
     { label: "Warnings / Rejected", value: computed.warning + computed.rejected, fillClass: "fill-pending" },
   ];
 
-  const quickActions = [
-    { to: "/upload", label: "Upload New Document", hint: "Send a file to OCR validation" },
-    { to: "/ocr", label: "Run OCR Processing", hint: "Extract and verify invoice data" },
-    { to: "/generation", label: "Generate Test Documents", hint: "Create valid and erroneous files" },
-    { to: "/documents", label: "Open Documents List", hint: "Review all uploaded files" },
-  ];
-
-  const latestUploads = documents.slice(0, 5).map((d) => ({
+  const latestUploads = documents.slice(0, 5).map((d, index) => ({
+    key: d.id || `${d.name || "document"}-${d.createdAt || index}-${index}`,
     name: d.name || "Document",
     at: new Date(d.createdAt).toLocaleString(),
     status: d.status === "validated" ? "Validated" : d.status === "warning" ? "Warning" : "Rejected",
@@ -97,6 +147,9 @@ export default function Dashboard() {
           Python: {pyHealth}
         </div>
       </div>
+
+      {dashboardLoading && <p className="empty-state">Loading dashboard data...</p>}
+      {dashboardError && <p className="empty-state">{dashboardError}</p>}
 
       <div className="stats-grid">
         {stats.map((item) => (
@@ -169,7 +222,7 @@ export default function Dashboard() {
 
           {latestUploads.length === 0 && <p className="empty-state">No real activity yet.</p>}
           {latestUploads.map((upload) => (
-            <div className="upload-item" key={upload.name}>
+            <div className="upload-item" key={upload.key}>
               <div>
                 <strong>{upload.name}</strong>
                 <p>{upload.at}</p>
@@ -180,20 +233,6 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="dashboard-panel quick-actions-panel">
-        <div className="panel-head">
-          <h3>Quick Actions</h3>
-          <span>•••</span>
-        </div>
-        <div className="quick-actions-grid">
-          {quickActions.map((action) => (
-            <Link className="quick-action-card" key={action.to} to={action.to}>
-              <strong>{action.label}</strong>
-              <p>{action.hint}</p>
-            </Link>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

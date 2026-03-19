@@ -35,11 +35,6 @@ export default function Home() {
           <span>DocaTrust</span>
         </Link>
 
-        <ul className="home-nav-links">
-          <li><Link to="/" className="active">Accueil</Link></li>
-          <li><a href="#fonctionnalites">Fonctionnalités</a></li>
-        </ul>
-
         <div className="home-nav-actions">
           <Link to="/login" className="home-btn-ghost">Connexion</Link>
           <Link to="/signup" className="home-btn-solid">Inscription</Link>

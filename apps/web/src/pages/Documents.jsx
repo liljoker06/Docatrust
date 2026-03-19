@@ -2,7 +2,9 @@ import "../styles/documents.css";
 import "../styles/generation.css";
 import "../styles/upload.css";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { listDocuments, getDocumentResult, getDocumentDownloadUrl } from "../services/pyraApi";
+import { clearAuthSession } from "../lib/auth";
 
 const STATUS_LABEL = {
   RAW:     { label: "En attente",      cls: "warning"   },
@@ -119,6 +121,7 @@ export default function Documents() {
   const [docs, setDocs]       = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
@@ -126,12 +129,24 @@ export default function Documents() {
         const res = await listDocuments();
         setDocs(res.documents ?? []);
       } catch (e) {
-        setError(e.message || "Impossible de charger les documents.");
+        const msg = e.message || "Impossible de charger les documents.";
+        const isAuthProblem =
+          msg.toLowerCase().includes("missing token") ||
+          msg.toLowerCase().includes("invalid token") ||
+          msg.toLowerCase().includes("unauthorized");
+
+        if (isAuthProblem) {
+          clearAuthSession();
+          navigate("/login", { replace: true });
+          return;
+        }
+
+        setError(msg);
       } finally {
         setLoading(false);
       }
     })();
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="documents-page">
