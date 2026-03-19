@@ -13,6 +13,7 @@ services:
       - /app/node_modules
     environment:
       VITE_API_URL: http://localhost:4000
+      VITE_PYTHON_API_URL: http://localhost:8000
     networks:
       - frontend
     command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 3000"
@@ -237,6 +238,16 @@ services:
       AIRFLOW__API__AUTH_BACKENDS: >
         airflow.api.auth.backend.basic_auth,
         airflow.api.auth.backend.session
+      # Accès services internes
+      PYTHON_API_URL: http://python:8000
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-pyra_data}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
     depends_on:
       airflow-init:
         condition: service_completed_successfully
@@ -260,6 +271,16 @@ services:
       AIRFLOW__API__AUTH_BACKENDS: >
         airflow.api.auth.backend.basic_auth,
         airflow.api.auth.backend.session
+      # Accès services internes
+      PYTHON_API_URL: http://python:8000
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-pyra_data}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
     depends_on:
       airflow-init:
         condition: service_completed_successfully
