@@ -3,6 +3,73 @@
   padding: 10px;
   background: linear-gradient(135deg, #7f95c9 0%, #8aa0d3 45%, #7b91c4 100%);
   border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.documents-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+}
+
+.document-card {
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 18px;
+  padding: 14px;
+}
+
+.document-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.document-title {
+  margin: 0;
+  color: #fff;
+  font-size: 15px;
+  word-break: break-word;
+}
+
+.document-meta {
+  margin: 0;
+  color: rgba(241, 247, 255, 0.86);
+  font-size: 13px;
+}
+
+.document-alerts {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.document-alerts ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: #eef4ff;
+}
+
+.document-alerts li {
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.document-empty {
+  padding: 20px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #f1f7ff;
+  font-size: 14px;
+}
+.documents-page {
+  min-height: 100%;
+  padding: 10px;
+  background: linear-gradient(135deg, #7f95c9 0%, #8aa0d3 45%, #7b91c4 100%);
+  border-radius: 28px;
   border: 1px solid rgba(255,255,255,0.18);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
 }
