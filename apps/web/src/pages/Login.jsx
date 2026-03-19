@@ -132,7 +132,10 @@ export default function Login() {
           </form>
 
           <p className="login-footer-text">
-            Don’t have an account? <Link to="/signup">Sign Up</Link>
+            Pas encore de compte ? <Link to="/signup">S’inscrire</Link>
+          </p>
+          <p className="login-footer-text" style={{ marginTop: 0 }}>
+            <Link to="/" style={{ color: "#79a0ff", fontSize: 13 }}>← Retour à l’accueil</Link>
           </p>
 
           <div className="login-social-row">

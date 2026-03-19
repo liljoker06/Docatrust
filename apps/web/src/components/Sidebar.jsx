@@ -72,11 +72,9 @@ export default function Sidebar() {
 
   const navItems = [
     { to: "/dashboard", label: "Dashboard", icon: <DashboardIcon /> },
-    { to: "/upload", label: "Upload", icon: <UploadIcon /> },
-    { to: "/documents", label: "Documents", icon: <DocumentIcon /> },
-    { to: "/generation", label: "Génération", icon: <GenerationIcon /> },
-    { to: "/ocr", label: "OCR", icon: <OcrIcon /> },
-    { to: "/", label: "Logout", icon: <LogoutIcon /> },
+    { to: "/upload",    label: "Upload",     icon: <UploadIcon />    },
+    { to: "/documents", label: "Documents",  icon: <DocumentIcon />  },
+    { to: "/",          label: "Logout",     icon: <LogoutIcon />    },
   ];
 
   return (

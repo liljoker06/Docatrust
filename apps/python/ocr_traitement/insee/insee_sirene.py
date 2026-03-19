@@ -111,7 +111,7 @@ def lookup_sirene(identifier: str, *, api_key: Optional[str] = None, base_url: O
 
     api_key = (api_key or os.environ.get("INSEE_API_KEY_INTEGRATION") or os.environ.get("INSEE_API_KEY") or "").strip()
     if not api_key:
-        return InseeLookupResult(ok=False, kind="unknown", summary={}, error="Missing INSEE_API_KEY_INTEGRATION")
+        return InseeLookupResult(ok=False, kind="unknown", summary={}, error="Service INSEE temporairement indisponible.")
 
     base_url = (base_url or os.environ.get("INSEE_SIRENE_BASE_URL") or DEFAULT_SIRENE_BASE_URL).strip().rstrip("/")
     d = _digits(identifier)
