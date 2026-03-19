@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const { sequelize } = require("./models");
 const userRouter = require("./routes/user.routes.js");
 const adminRouter = require("./routes/admin.routes.js");
+const documentRouter = require("./routes/document.routes.js");
 const authMiddleware = require("./middlewares/auth.middleware.js");
 const requireRole = require("./middlewares/role.middleware.js");
 
@@ -17,12 +18,13 @@ app.use(morgan("dev"));
 
 console.log("test");
 
-app.get("/health", (req, res) => {
+app.get("/health", (_req, res) => {
   res.json({ status: "ok", service: "api" });
 });
 
 app.use("/api/users", userRouter);
 app.use("/api/admin", authMiddleware, requireRole("ADMIN"), adminRouter);
+app.use("/api/documents", documentRouter);
 
 async function start() {
   try {
