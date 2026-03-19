@@ -1,45 +1,31 @@
-import "../styles/navbar.css";
+import { useNavigate } from "react-router-dom";
+import { api } from "../services/api";
 
-function MenuIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M4 6h16"></path>
-      <path d="M4 12h16"></path>
-      <path d="M4 18h16"></path>
-    </svg>
-  );
-}
+export default function Navbar({ title = "Dashboard" }) {
+  const navigate = useNavigate();
 
-function BellIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2a2 2 0 01-.6 1.4L4 17h5"></path>
-      <path d="M10 17a2 2 0 004 0"></path>
-    </svg>
-  );
-}
+  function handleLogout() {
+    api.removeToken();
+    navigate("/login");
+  }
 
-export default function Navbar() {
   return (
-    <div className="navbar">
-      <div className="navbar-left">
-        <button className="menu-btn">
-          <MenuIcon />
+    <div className="h-14 bg-white border-b border-slate-200 px-6 flex items-center justify-between shrink-0">
+      <h1 className="text-base font-semibold text-slate-800">{title}</h1>
+
+      <div className="flex items-center gap-3">
+        <span className="text-xs text-slate-400 bg-slate-100 px-2.5 py-1 rounded-full font-medium">
+          ADMIN
+        </span>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-red-500 transition-colors"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          Déconnexion
         </button>
-        <span className="navbar-title">Dashboard</span>
-      </div>
-
-      <div className="navbar-right">
-        <div className="navbar-search">
-          <input type="text" placeholder="Search..." />
-        </div>
-
-        <button className="notif-btn">
-          <BellIcon />
-          <span className="notif-dot"></span>
-        </button>
-
-        <div className="avatar">M</div>
       </div>
     </div>
   );

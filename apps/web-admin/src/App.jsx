@@ -1,21 +1,24 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
+import Navbar from "./components/Navbar";
+import { api } from "./services/api";
 
+import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import Suppliers from "./pages/Suppliers";
-import SupplierDetails from "./pages/SupplierDetails";
+import Users from "./pages/Users";
+import Documents from "./pages/Documents";
 import Alerts from "./pages/Alerts";
 import Logs from "./pages/Logs";
 import ValidationDetails from "./pages/ValidationDetails";
 
-function Layout({ children }) {
+function PrivateRoute({ children, title }) {
+  if (!api.getToken()) return <Navigate to="/login" replace />;
   return (
-    <div style={{ display: "flex", minHeight: "100vh" }}>
+    <div className="flex min-h-screen">
       <Sidebar />
-      <div style={{ flex: 1 }}>
-        <Navbar />
-        <div style={{ padding: "20px" }}>{children}</div>
+      <div className="flex flex-col flex-1 min-w-0">
+        <Navbar title={title} />
+        <main className="flex-1 p-6 bg-slate-100">{children}</main>
       </div>
     </div>
   );
@@ -25,55 +28,34 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/login" element={<Login />} />
+
         <Route
           path="/"
-          element={
-            <Layout>
-              <Dashboard />
-            </Layout>
-          }
+          element={<PrivateRoute title="Dashboard"><Dashboard /></PrivateRoute>}
         />
         <Route
-          path="/suppliers"
-          element={
-            <Layout>
-              <Suppliers />
-            </Layout>
-          }
+          path="/users"
+          element={<PrivateRoute title="Utilisateurs"><Users /></PrivateRoute>}
         />
         <Route
-          path="/suppliers/:id"
-          element={
-            <Layout>
-              <SupplierDetails />
-            </Layout>
-          }
+          path="/documents"
+          element={<PrivateRoute title="Documents"><Documents /></PrivateRoute>}
+        />
+        <Route
+          path="/documents/:id"
+          element={<PrivateRoute title="Détails document"><ValidationDetails /></PrivateRoute>}
         />
         <Route
           path="/alerts"
-          element={
-            <Layout>
-              <Alerts />
-            </Layout>
-          }
+          element={<PrivateRoute title="Alertes de conformité"><Alerts /></PrivateRoute>}
         />
         <Route
           path="/logs"
-          element={
-            <Layout>
-              <Logs />
-            </Layout>
-          }
+          element={<PrivateRoute title="Logs pipeline"><Logs /></PrivateRoute>}
         />
-        <Route
-          path="/validation"
-          element={
-            <Layout>
-              <ValidationDetails />
-            </Layout>
-          }
-        />
-        <Route path="*" element={<Navigate to="/" />} />
+
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
