@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import cv2  # type: ignore
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
@@ -31,11 +32,6 @@ def process_invoice_image(
     - Returns `row` compatible with CSV export.
     - Optionally enriches with INSEE fields if env key is present.
     """
-
-    try:
-        import cv2  # type: ignore
-    except Exception as e:
-        raise SystemExit("OpenCV (cv2) is required. Install: pip install opencv-python") from e
 
     img_bgr_full = cv2.imread(str(image_path))
     if img_bgr_full is None:

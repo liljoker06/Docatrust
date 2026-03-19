@@ -2,6 +2,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
 import logo from "../assets/logo.png";
 import "../styles/login.css";
+import { setAuthSession } from "../lib/auth";
+import { loginApi } from "../services/authApi";
 
 function MailIcon() {
   return (
@@ -39,10 +41,29 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    navigate("/dashboard");
+    if (!email.trim() || !password.trim()) {
+      setError("Email and password are required.");
+      return;
+    }
+    setError("");
+    setLoading(true);
+    try {
+      const data = await loginApi(email.trim(), password);
+      setAuthSession({
+        token: data.token,
+        user: data.user,
+      });
+      navigate("/dashboard");
+    } catch (e2) {
+      setError(e2.message || "Login failed.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -100,13 +121,21 @@ export default function Login() {
               </div>
             </div>
 
-            <button className="login-button" type="submit">
-              Sign In
+            <button className="login-button" type="submit" disabled={loading}>
+              {loading ? "Signing In..." : "Sign In"}
             </button>
+            {error && (
+              <p style={{ color: "#ffb8b8", fontSize: 13, marginTop: 10 }}>
+                {error}
+              </p>
+            )}
           </form>
 
           <p className="login-footer-text">
-            Don’t have an account? <Link to="/signup">Sign Up</Link>
+            Pas encore de compte ? <Link to="/signup">S’inscrire</Link>
+          </p>
+          <p className="login-footer-text" style={{ marginTop: 0 }}>
+            <Link to="/" style={{ color: "#79a0ff", fontSize: 13 }}>← Retour à l’accueil</Link>
           </p>
 
           <div className="login-social-row">

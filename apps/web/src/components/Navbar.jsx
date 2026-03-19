@@ -1,5 +1,7 @@
 import "../styles/navbar.css";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { getAuthSession } from "../lib/auth";
 
 function BellIcon() {
   return (
@@ -20,6 +22,21 @@ function MenuIcon() {
 
 export default function Navbar() {
   const [search, setSearch] = useState("");
+  const location = useLocation();
+  const session = getAuthSession();
+  const currentPage =
+    location.pathname === "/dashboard"
+      ? "Dashboard"
+      : location.pathname === "/upload"
+        ? "Upload"
+        : location.pathname === "/documents"
+          ? "Documents"
+          : location.pathname === "/generation"
+            ? "Generation"
+            : location.pathname === "/ocr"
+              ? "OCR"
+              : "Workspace";
+  const avatarLetter = (session?.name || session?.email || "U").trim().charAt(0).toUpperCase();
 
   return (
     <header className="navbar">
@@ -29,7 +46,7 @@ export default function Navbar() {
           <MenuIcon />
         </button>
 
-        <h2 className="navbar-title">Dashboard</h2>
+        <h2 className="navbar-title">{currentPage}</h2>
       </div>
 
       {/* RIGHT */}
@@ -51,7 +68,7 @@ export default function Navbar() {
         </button>
 
         {/* USER */}
-        <div className="avatar">J</div>
+        <div className="avatar">{avatarLetter}</div>
       </div>
     </header>
   );

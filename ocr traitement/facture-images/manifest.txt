@@ -1,0 +1,126 @@
+# Facture Image Generation Manifest
+# Generated: 2026-03-16T14:33:45.628965
+# Total images: 120
+
+# Format: filename | quality_type | quality_level | description | source_file
+----------------------------------------------------------------------------------------------------
+facture_2026001_clean.jpg | clean | high | Clean high-resolution image | facture-001.md
+facture_2026001_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-001.md
+facture_2026001_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-001.md
+facture_2026002_clean.jpg | clean | high | Clean high-resolution image | facture-002.md
+facture_2026002_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-002.md
+facture_2026002_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-002.md
+facture_2026003_clean.jpg | clean | high | Clean high-resolution image | facture-003.md
+facture_2026003_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-003.md
+facture_2026003_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-003.md
+facture_2026004_clean.jpg | clean | high | Clean high-resolution image | facture-004.md
+facture_2026004_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-004.md
+facture_2026004_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-004.md
+facture_2026005_clean.jpg | clean | high | Clean high-resolution image | facture-005.md
+facture_2026005_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-005.md
+facture_2026005_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-005.md
+facture_2026006_clean.jpg | clean | high | Clean high-resolution image | facture-006.md
+facture_2026006_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-006.md
+facture_2026006_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-006.md
+facture_2026007_clean.jpg | clean | high | Clean high-resolution image | facture-007.md
+facture_2026007_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-007.md
+facture_2026007_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-007.md
+facture_2026008_clean.jpg | clean | high | Clean high-resolution image | facture-008.md
+facture_2026008_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-008.md
+facture_2026008_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-008.md
+facture_2026009_clean.jpg | clean | high | Clean high-resolution image | facture-009.md
+facture_2026009_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-009.md
+facture_2026009_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-009.md
+facture_2026010_clean.jpg | clean | high | Clean high-resolution image | facture-010.md
+facture_2026010_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-010.md
+facture_2026010_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-010.md
+facture_2026011_clean.jpg | clean | high | Clean high-resolution image | facture-011.md
+facture_2026011_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-011.md
+facture_2026011_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-011.md
+facture_2026012_clean.jpg | clean | high | Clean high-resolution image | facture-012.md
+facture_2026012_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-012.md
+facture_2026012_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-012.md
+facture_2026013_clean.jpg | clean | high | Clean high-resolution image | facture-013.md
+facture_2026013_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-013.md
+facture_2026013_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-013.md
+facture_2026014_clean.jpg | clean | high | Clean high-resolution image | facture-014.md
+facture_2026014_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-014.md
+facture_2026014_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-014.md
+facture_2026015_clean.jpg | clean | high | Clean high-resolution image | facture-015.md
+facture_2026015_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-015.md
+facture_2026015_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-015.md
+facture_2026016_clean.jpg | clean | high | Clean high-resolution image | facture-016.md
+facture_2026016_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-016.md
+facture_2026016_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-016.md
+facture_2026017_clean.jpg | clean | high | Clean high-resolution image | facture-017.md
+facture_2026017_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-017.md
+facture_2026017_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-017.md
+facture_2026018_clean.jpg | clean | high | Clean high-resolution image | facture-018.md
+facture_2026018_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-018.md
+facture_2026018_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-018.md
+facture_2026019_clean.jpg | clean | high | Clean high-resolution image | facture-019.md
+facture_2026019_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-019.md
+facture_2026019_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-019.md
+facture_2026020_clean.jpg | clean | high | Clean high-resolution image | facture-020.md
+facture_2026020_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-020.md
+facture_2026020_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-020.md
+facture_2026021_clean.jpg | clean | high | Clean high-resolution image | facture-021.md
+facture_2026021_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-021.md
+facture_2026021_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-021.md
+facture_2026022_clean.jpg | clean | high | Clean high-resolution image | facture-022.md
+facture_2026022_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-022.md
+facture_2026022_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-022.md
+facture_2026023_clean.jpg | clean | high | Clean high-resolution image | facture-023.md
+facture_2026023_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-023.md
+facture_2026023_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-023.md
+facture_2026024_clean.jpg | clean | high | Clean high-resolution image | facture-024.md
+facture_2026024_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-024.md
+facture_2026024_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-024.md
+facture_2026025_clean.jpg | clean | high | Clean high-resolution image | facture-025.md
+facture_2026025_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-025.md
+facture_2026025_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-025.md
+facture_2026026_clean.jpg | clean | high | Clean high-resolution image | facture-026.md
+facture_2026026_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-026.md
+facture_2026026_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-026.md
+facture_2026027_clean.jpg | clean | high | Clean high-resolution image | facture-027.md
+facture_2026027_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-027.md
+facture_2026027_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-027.md
+facture_2026028_clean.jpg | clean | high | Clean high-resolution image | facture-028.md
+facture_2026028_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-028.md
+facture_2026028_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-028.md
+facture_2026029_clean.jpg | clean | high | Clean high-resolution image | facture-029.md
+facture_2026029_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-029.md
+facture_2026029_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-029.md
+facture_2026030_clean.jpg | clean | high | Clean high-resolution image | facture-030.md
+facture_2026030_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-030.md
+facture_2026030_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-030.md
+facture_2026031_clean.jpg | clean | high | Clean high-resolution image | facture-031.md
+facture_2026031_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-031.md
+facture_2026031_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-031.md
+facture_2026032_clean.jpg | clean | high | Clean high-resolution image | facture-032.md
+facture_2026032_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-032.md
+facture_2026032_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-032.md
+facture_2026033_clean.jpg | clean | high | Clean high-resolution image | facture-033.md
+facture_2026033_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-033.md
+facture_2026033_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-033.md
+facture_2026034_clean.jpg | clean | high | Clean high-resolution image | facture-034.md
+facture_2026034_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-034.md
+facture_2026034_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-034.md
+facture_2026035_clean.jpg | clean | high | Clean high-resolution image | facture-035.md
+facture_2026035_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-035.md
+facture_2026035_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-035.md
+facture_2026036_clean.jpg | clean | high | Clean high-resolution image | facture-036.md
+facture_2026036_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-036.md
+facture_2026036_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-036.md
+facture_2026037_clean.jpg | clean | high | Clean high-resolution image | facture-037.md
+facture_2026037_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-037.md
+facture_2026037_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-037.md
+facture_2026038_clean.jpg | clean | high | Clean high-resolution image | facture-038.md
+facture_2026038_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-038.md
+facture_2026038_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-038.md
+facture_2026039_clean.jpg | clean | high | Clean high-resolution image | facture-039.md
+facture_2026039_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-039.md
+facture_2026039_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-039.md
+facture_2026040_clean.jpg | clean | high | Clean high-resolution image | facture-040.md
+facture_2026040_semi_blur.jpg | semi_blur | medium | Semi-blurred image with slight motion/focus issues | facture-040.md
+facture_2026040_phone_capture.jpg | phone_capture | medium | Phone-captured image with rotation and lighting effects | facture-040.md

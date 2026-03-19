@@ -2,16 +2,38 @@ import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
 import logo from "../assets/logo.png";
 import "../styles/login.css";
+import { setAuthSession } from "../lib/auth";
+import { loginApi, registerApi } from "../services/authApi";
 
 export default function SignUp() {
   const navigate = useNavigate();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
-    navigate("/dashboard");
+    if (!fullName.trim() || !email.trim() || !password.trim()) {
+      setError("All fields are required.");
+      return;
+    }
+    setError("");
+    setLoading(true);
+    try {
+      await registerApi(email.trim(), password);
+      const loginData = await loginApi(email.trim(), password);
+      setAuthSession({
+        token: loginData.token,
+        user: { ...loginData.user, name: fullName.trim() },
+      });
+      navigate("/dashboard");
+    } catch (e2) {
+      setError(e2.message || "Sign up failed.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -78,13 +100,21 @@ export default function SignUp() {
               </div>
             </div>
 
-            <button className="login-button" type="submit">
-              Create Account
+            <button className="login-button" type="submit" disabled={loading}>
+              {loading ? "Creating..." : "Create Account"}
             </button>
+            {error && (
+              <p style={{ color: "#ffb8b8", fontSize: 13, marginTop: 10 }}>
+                {error}
+              </p>
+            )}
           </form>
 
           <p className="login-footer-text">
-            Already have an account? <Link to="/">Sign In</Link>
+            Déjà un compte ? <Link to="/login">Se connecter</Link>
+          </p>
+          <p className="login-footer-text" style={{ marginTop: 0 }}>
+            <Link to="/" style={{ color: "#79a0ff", fontSize: 13 }}>← Retour à l'accueil</Link>
           </p>
 
           <div className="login-copyright">
