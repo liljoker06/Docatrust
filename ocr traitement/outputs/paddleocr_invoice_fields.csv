@@ -1,0 +1,17 @@
+﻿image_file;invoice_number;date_emission;date_echeance;supplier_name;supplier_address;supplier_city;supplier_phone;supplier_email;supplier_siret;supplier_tva;client_name;client_address;client_city;total_ht;tva;total_ttc;bic;iban;raw_supplier_block;raw_client_block;raw_totals_block
+/Users/aymanehajli/Desktop/IPSSI/HACKATHON/Docatrust/ocr traitement/facture-images/facture_2026001_classic_clean.jpg;FAC-2026-001;16/03/2026;15/04/2026;SARL TECH SOLUTIONS FRANCE;42 Avenue des Champe-Élysées;75008 PARIS;01 42 56 78 90;contact@techsolutions-exemple.fr;85246813500012;TVA:;ENTREPRISE DEMO SARL;15 Rue de la République;69002 LYON;1 500,00;9 000,00;;;;"FOURNISSEUR
+SARL TECH SOLUTIONS FRANCE
+42 Avenue des Champe-Élysées
+75008 PARIS
+Tél: 01 42 56 78 90
+Email: contact@techsolutions-exemple.fr
+SIRET: 852 468 135 00012
+TVA: FR 28 852468135";"CLIENT
+ENTREPRISE DEMO SARL
+15 Rue de la République
+69002 LYON";"7 500,00
+Total HT:
+1 500,00
+TVA:
+9 000,00
+Total TTC:"
