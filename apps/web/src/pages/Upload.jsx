@@ -1,12 +1,21 @@
 import "../styles/upload.css";
+import "../styles/generation.css";
 import { useState } from "react";
+import { processOcr } from "../services/pyraApi";
+import { addActivity } from "../lib/activity";
+import { addDocument, normalizeDocumentFromOcr } from "../lib/documents";
 
 export default function Upload() {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [ocrLoading, setOcrLoading] = useState(false);
+  const [ocrResult, setOcrResult] = useState(null);
+  const [ocrError, setOcrError] = useState(null);
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       setSelectedFile(e.target.files[0]);
+      setOcrResult(null);
+      setOcrError(null);
     }
   };
 
@@ -15,8 +24,26 @@ export default function Upload() {
       alert("Please select a file first.");
       return;
     }
-
+    addActivity({ type: "upload", action: selectedFile.name, status: "success" });
     alert(`File selected: ${selectedFile.name}`);
+  };
+
+  const handleOcr = async () => {
+    if (!selectedFile) return;
+    setOcrLoading(true);
+    setOcrError(null);
+    setOcrResult(null);
+    try {
+      const data = await processOcr(selectedFile);
+      setOcrResult(data);
+      addDocument(normalizeDocumentFromOcr(data, selectedFile.name));
+      addActivity({ type: "ocr", action: `upload OCR ${selectedFile.name}`, status: "success" });
+    } catch (e) {
+      setOcrError(e.message || "Erreur OCR");
+      addActivity({ type: "ocr", action: `upload OCR ${selectedFile.name}`, status: "failed" });
+    } finally {
+      setOcrLoading(false);
+    }
   };
 
   return (
@@ -54,6 +81,28 @@ export default function Upload() {
           <button className="upload-button" onClick={handleUpload}>
             Upload Document
           </button>
+
+          {selectedFile && (
+            <>
+              <button
+                className="upload-button"
+                style={{ marginTop: 10, background: "linear-gradient(90deg, #5a8f5a, #7ab07a)" }}
+                disabled={ocrLoading}
+                onClick={handleOcr}
+              >
+                {ocrLoading ? "Traitement OCR…" : "Traiter avec OCR (Pyra)"}
+              </button>
+              {ocrError && <p className="ocr-error">{ocrError}</p>}
+              {ocrResult && (
+                <div className="generation-result" style={{ marginTop: 16 }}>
+                  <div className="upload-card-head"><h3>Résultat OCR</h3></div>
+                  <pre className="generation-output">
+                    {JSON.stringify(ocrResult.data ?? ocrResult, null, 2)}
+                  </pre>
+                </div>
+              )}
+            </>
+          )}
         </div>
 
         <div className="upload-side-card">
