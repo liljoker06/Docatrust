@@ -27,3 +27,19 @@ export async function pyRequest(path, options = {}) {
   if (!res.ok) throw new Error(data.message || data.detail || res.statusText);
   return data;
 }
+
+export async function apiFormRequest(path, formData) {
+  const token = getAuthToken();
+  const headers = {};
+  if (token) headers.Authorization = `Bearer ${token}`;
+  // Ne pas forcer Content-Type : le browser gère le boundary multipart automatiquement
+
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: "POST",
+    headers,
+    body: formData,
+  });
+  const data = await parseJson(res);
+  if (!res.ok) throw new Error(data.message || data.detail || res.statusText);
+  return data;
+}

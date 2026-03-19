@@ -1,11 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import Upload from "./pages/Upload";
 import Documents from "./pages/Documents";
-import Generation from "./pages/Generation";
-import Ocr from "./pages/Ocr";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import { isAuthenticated } from "./lib/auth";
@@ -24,7 +23,7 @@ function Layout({ children }) {
 
 function ProtectedRoute({ children }) {
   if (!isAuthenticated()) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
   }
   return children;
 }
@@ -40,8 +39,10 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Home />} />
+
         <Route
-          path="/"
+          path="/login"
           element={
             <PublicRoute>
               <Login />
@@ -90,29 +91,7 @@ export default function App() {
           }
         />
 
-        <Route
-          path="/generation"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Generation />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/ocr"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <Ocr />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </BrowserRouter>
   );

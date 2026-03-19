@@ -157,6 +157,11 @@
   color: #5e73ac;
 }
 
+.doc-badge.warning {
+  background: rgba(255, 244, 221, 0.72);
+  color: #b9882d;
+}
+
 @media (max-width: 900px) {
   .documents-table thead {
     display: none;

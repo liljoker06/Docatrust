@@ -29,5 +29,6 @@ async def process_invoice(file: UploadFile) -> dict:
 def sirene_lookup(identifier: str) -> dict:
     result = lookup_sirene(identifier)
     if not result.ok:
-        raise HTTPException(status_code=404, detail=result.error)
+        status = result.http_status or 502
+        raise HTTPException(status_code=status, detail=result.error)
     return {"status": "ok", "data": result.summary}

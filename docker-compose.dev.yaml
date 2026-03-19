@@ -115,8 +115,6 @@ services:
       MINIO_ENDPOINT: minio:9000
       MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
       MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
-      INSEE_API_KEY_INTEGRATION: ${INSEE_API_KEY_INTEGRATION}
-      INSEE_SIRENE_BASE_URL: ${INSEE_SIRENE_BASE_URL}
     depends_on:
       redis:
         condition: service_healthy
@@ -240,6 +238,16 @@ services:
       AIRFLOW__API__AUTH_BACKENDS: >
         airflow.api.auth.backend.basic_auth,
         airflow.api.auth.backend.session
+      # Accès services internes
+      PYTHON_API_URL: http://python:8000
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-pyra_data}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
     depends_on:
       airflow-init:
         condition: service_completed_successfully
@@ -263,6 +271,16 @@ services:
       AIRFLOW__API__AUTH_BACKENDS: >
         airflow.api.auth.backend.basic_auth,
         airflow.api.auth.backend.session
+      # Accès services internes
+      PYTHON_API_URL: http://python:8000
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-pyra_data}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
     depends_on:
       airflow-init:
         condition: service_completed_successfully

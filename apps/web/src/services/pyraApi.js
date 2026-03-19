@@ -1,26 +1,33 @@
-import { pyRequest, PY_BASE } from "./apiClient";
+import { pyRequest, apiRequest, apiFormRequest, API_BASE } from "./apiClient";
+import { getAuthToken } from "../lib/auth";
 
-async function request(path, options = {}) {
-  return pyRequest(path, {
-    ...options,
-    headers: { ...options.headers },
-  });
+// ─── OCR & Documents ───────────────────────────────────────────────────────
+
+export async function uploadDocument(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+  return apiFormRequest("/api/documents/upload", formData);
 }
 
-export async function processOcr(file) {
-  const form = new FormData();
-  form.append("file", file);
-  const res = await fetch(`${PY_BASE}/ocr/process`, {
-    method: "POST",
-    body: form,
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.detail || data.message || res.statusText);
-  return data;
+export async function listDocuments() {
+  return apiRequest("/api/documents");
+}
+
+export async function getDocumentStatus(documentId) {
+  return apiRequest(`/api/documents/${documentId}/status`);
+}
+
+export async function getDocumentResult(documentId) {
+  return apiRequest(`/api/documents/${documentId}/result`);
+}
+
+export function getDocumentDownloadUrl(documentId) {
+  const token = getAuthToken();
+  return `${API_BASE}/api/documents/${documentId}/download?token=${token}`;
 }
 
 export async function getSirene(identifier) {
-  return request(`/ocr/sirene/${encodeURIComponent(identifier)}`);
+  return pyRequest(`/ocr/sirene/${encodeURIComponent(identifier)}`);
 }
 
 async function postGenerate(path) {
