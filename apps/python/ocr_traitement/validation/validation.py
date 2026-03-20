@@ -79,7 +79,6 @@ def validate_invoice_row(row: Dict[str, str]) -> List[ValidationAlert]:
     alerts: List[ValidationAlert] = []
 
     supplier_siret = _digits(row.get("supplier_siret", ""))
-    supplier_tva = (row.get("supplier_tva", "") or "").strip().upper().replace(" ", "")
 
     # --- SIRET basic checks
     if supplier_siret and len(supplier_siret) != 14:
@@ -91,33 +90,6 @@ def validate_invoice_row(row: Dict[str, str]) -> List[ValidationAlert]:
                 meta={"value": row.get("supplier_siret", "")},
             )
         )
-
-    # --- TVA format + coherence with SIREN
-    # French VAT: FR + 2 chars (digits/letters) + 9-digit SIREN
-    if supplier_tva:
-        m = re.match(r"^FR([A-Z0-9]{2})(\d{9})$", supplier_tva)
-        if not m:
-            alerts.append(
-                ValidationAlert(
-                    code="VAT_FORMAT_INVALID",
-                    level="warning",
-                    message="Le numéro de TVA ne correspond pas au format FR.. + SIREN(9).",
-                    meta={"value": row.get("supplier_tva", "")},
-                )
-            )
-        else:
-            vat_siren = m.group(2)
-            if supplier_siret and len(supplier_siret) == 14:
-                siret_siren = supplier_siret[:9]
-                if vat_siren != siret_siren:
-                    alerts.append(
-                        ValidationAlert(
-                            code="VAT_SIREN_MISMATCH",
-                            level="error",
-                            message="Incohérence: la TVA (SIREN) ne correspond pas au SIRET.",
-                            meta={"vat_siren": vat_siren, "siret_siren": siret_siren},
-                        )
-                    )
 
     # --- Totals coherence: TTC ≈ HT + TVA amount
     ht = _parse_amount_fr(row.get("total_ht", ""))

@@ -108,6 +108,7 @@ services:
     volumes:
       - ./apps/python:/app
     env_file:
+      - ./.env
       - ./apps/api/.env
       - ./apps/python/.env
     environment:
